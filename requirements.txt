@@ -12,3 +12,5 @@ PyMySQL==1.0.2
 pytz==2021.1
 sqlparse==0.4.2
 toml==0.10.2
+requests==2.26.0
+PyJWT==2.3.0
