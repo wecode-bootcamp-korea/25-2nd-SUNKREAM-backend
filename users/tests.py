@@ -25,15 +25,15 @@ class KakaoLoginTest(TransactionTestCase):
         class MockDataResponse:
             def json(self):
                 return {
-                    "id": 123,
-                    "kakao_account": { 
-                        "email" : 'maxsummer256@gmail.com'
+                    'id': 123,
+                    'kakao_account': { 
+                        'email' : 'maxsummer256@gmail.com'
                     }
                 }
 
         mock_data_request.get = MagicMock(return_value=MockDataResponse())
-        header                = {"HTTP_Authorization" : "access_token"}
-        response              = client.get('/users/login/kakao', content_type="application/json", **header)
+        header                = {'HTTP_Authorization' : 'access_token'}
+        response              = client.get('/users/login/kakao', content_type='application/json', **header)
         login_token           = jwt.encode({'user_id': 1}, SECRET_KEY, ALGORITHMS)
 
         self.assertEqual(response.status_code, 201)
@@ -47,15 +47,15 @@ class KakaoSignUpTest(TransactionTestCase):
         class MockDataResponse:
             def json(self):
                 return {
-                    "id": 123,
-                    "kakao_account": { 
-                        "email" : 'maxsummer256@gmail.com'
+                    'id': 123,
+                    'kakao_account': { 
+                        'email' : 'maxsummer256@gmail.com'
                     }
                 }
 
         mock_data_request.get = MagicMock(return_value=MockDataResponse())
-        header                = {"HTTP_Authorization" : "access_token"}
-        response              = client.get('/users/login/kakao', content_type="application/json", **header)
+        header                = {'HTTP_Authorization' : 'access_token'}
+        response              = client.get('/users/login/kakao', content_type='application/json', **header)
         login_token           = jwt.encode({'user_id': 1}, SECRET_KEY, ALGORITHMS)
 
         self.assertEqual(response.status_code, 201)
@@ -64,7 +64,7 @@ class KakaoSignUpTest(TransactionTestCase):
     def test_kakao_login_fail(self):
         client   = Client()
 
-        header   = {"No_Authorization" : ""}
-        response = client.get("/users/login/kakao", content_type="application/json", **header)
+        header   = {'No_Authorization' : ''}
+        response = client.get('/users/login/kakao', content_type='application/json', **header)
         
         self.assertEqual(response.status_code, 401)
