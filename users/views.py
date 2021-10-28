@@ -17,11 +17,13 @@ class KakaoLogin(View):
                 return JsonResponse({'messsage': 'INVALID_TOKEN'}, status=401)
 
             kakao_account = requests.get('https://kapi.kakao.com/v2/user/me', headers = {'Authorization': f'Bearer {token}'}).json()
+            print('::::kakao_account:', kakao_account)
 
             if not User.objects.filter(kakao_id=kakao_account['id']).exists():
                user = User.objects.create(
                     kakao_id = kakao_account['id'],
-                    email    = kakao_account['kakao_account']['email']
+                    email    = kakao_account['kakao_account']['email'],
+                    name     = kakao_account['kakao_account']['profile']['nickname']
                )
             user = User.objects.get(kakao_id=kakao_account['id'])
 
