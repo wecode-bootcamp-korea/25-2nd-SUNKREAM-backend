@@ -16,7 +16,7 @@ pymysql.install_as_MySQLdb()
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','52.79.212.98','52.79.212.98:8000']
 
 
 # Application definition
