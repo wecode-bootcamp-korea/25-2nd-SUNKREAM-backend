@@ -12,7 +12,7 @@ class BiddingPosition(TimeStampModel):
     position = models.CharField(max_length = 20)
 
     class Meta:
-        db_table = 'bidding_positons'
+        db_table = 'bidding_positions'
 
 class Bidding(TimeStampModel):
     user             = models.ForeignKey('users.User', on_delete = models.SET_NULL, null = True)
@@ -37,6 +37,6 @@ class Order(TimeStampModel):
     seller       = models.ForeignKey('users.User', on_delete = models.CASCADE, related_name = 'seller')
 
     class Meta:
-        db_table = 'oders'
+        db_table = 'orders'
 
 
