@@ -10,6 +10,7 @@ from my_settings  import SECRET_KEY, ALGORITHMS
 class KakaoLoginTest(TransactionTestCase):
     def setUp(self):
          User.objects.create(
+            id       = 1,
             email    = 'maxsummer256@gmail.com',
             kakao_id = 123,
             point    = 100000000
@@ -56,7 +57,7 @@ class KakaoSignUpTest(TransactionTestCase):
         mock_data_request.get = MagicMock(return_value=MockDataResponse())
         header                = {'HTTP_Authorization' : 'access_token'}
         response              = client.get('/users/login/kakao', content_type='application/json', **header)
-        login_token           = jwt.encode({'user_id': 1}, SECRET_KEY, ALGORITHMS)
+        login_token           = jwt.encode({'user_id': 6}, SECRET_KEY, ALGORITHMS)
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json(), {'access_token': login_token})
