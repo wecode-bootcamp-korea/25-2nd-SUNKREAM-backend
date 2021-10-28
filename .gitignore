@@ -312,3 +312,6 @@ cython_debug/
 
 my_settings.py
 dbuploader.py
+db_faker.py
+dump.rdb
+dump1028.sql
