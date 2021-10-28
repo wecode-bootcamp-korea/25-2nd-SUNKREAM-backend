@@ -10,7 +10,6 @@ from django.db                   import transaction
 from django.db.models            import Q, F
 from django.db.models.query      import Prefetch
 from django.db.models.aggregates import Count, Min, Max
-from django.core.cache           import cache
 
 from products.models             import Product, ProductSize
 from orders.models               import Bidding, Order, BiddingPosition
@@ -80,8 +79,6 @@ class BiddingView(View):
                 product_size_id      = productsize_id, 
                 price                = price
             )
-
-            cache.delete(user.id)
 
             return JsonResponse({'message' : 'SUCCESS'}, status = 201)
 
@@ -211,10 +208,7 @@ class OrderView(View):
                 user.save()
                 bidding.user.point = bidding.user.point + bidding.price
                 bidding.user.save()
-            
-            cache.delete(user.id)
-            cache.delete(bidding.user.id)
-            
+               
             return JsonResponse({'message' : 'SUCCESS'}, status = 201)
         
         except Bidding.DoesNotExist:
@@ -320,70 +314,69 @@ class OrderListView(View):
     @query_debugger
     def get(self, request):
         user = request.user
-        if not cache.get(user.id):
-            buy_orders  = Order.objects.select_related('bidding__product_size__product__brand', 'bidding__product_size__size', 'order_status').\
-                        filter(buyer = user).prefetch_related('bidding__product_size__product__productimage_set')
 
-            sell_orders = Order.objects.select_related('bidding__product_size__product__brand', 'bidding__product_size__size', 'order_status').\
-                        filter(seller = user).prefetch_related('bidding__product_size__product__productimage_set')
+        buy_orders  = Order.objects.select_related('bidding__product_size__product__brand', 'bidding__product_size__size', 'order_status').\
+                    filter(buyer = user).prefetch_related('bidding__product_size__product__productimage_set')
 
-            biddings    = Bidding.objects.select_related('product_size__product__brand', 'product_size__size').\
-                        filter(user = user, bidding_status_id = BiddingStatusId.ON_BIDDING.value).prefetch_related('product_size__product__productimage_set')
+        sell_orders = Order.objects.select_related('bidding__product_size__product__brand', 'bidding__product_size__size', 'order_status').\
+                    filter(seller = user).prefetch_related('bidding__product_size__product__productimage_set')
 
-            buy_order_list = [{
-                'product_id'        : buy_order.bidding.product_size.product.id,
-                'product_image_url' : buy_order.bidding.product_size.product.productimage_set.all()[0].image_url,
-                'product_name'      : buy_order.bidding.product_size.product.name,
-                'product_brand'     : buy_order.bidding.product_size.product.brand.name,
-                'size'              : buy_order.bidding.product_size.size.size,
-                'order_status'      : buy_order.order_status.status,
-            }for buy_order in buy_orders]
+        biddings    = Bidding.objects.select_related('product_size__product__brand', 'product_size__size').\
+                    filter(user = user, bidding_status_id = BiddingStatusId.ON_BIDDING.value).prefetch_related('product_size__product__productimage_set')
 
-            sell_order_list = [{
-                'product_id'        : sell_order.bidding.product_size.product.id,
-                'product_image_url' : sell_order.bidding.product_size.product.productimage_set.all()[0].image_url,
-                'product_name'      : sell_order.bidding.product_size.product.name,
-                'product_brand'     : sell_order.bidding.product_size.product.brand.name,
-                'size'              : sell_order.bidding.product_size.size.size,
-                'order_status'      : sell_order.order_status.status,
-            }for sell_order in sell_orders]
+        buy_order_list = [{
+            'product_id'        : buy_order.bidding.product_size.product.id,
+            'product_image_url' : buy_order.bidding.product_size.product.productimage_set.all()[0].image_url,
+            'product_name'      : buy_order.bidding.product_size.product.name,
+            'product_brand'     : buy_order.bidding.product_size.product.brand.name,
+            'size'              : buy_order.bidding.product_size.size.size,
+            'order_status'      : buy_order.order_status.status,
+        }for buy_order in buy_orders]
 
-            buy_bidding_list = [{
-                'product_id'        : buy_bidding.product_size.product.id,
-                'product_image_url' : buy_bidding.product_size.product.productimage_set.all()[0].image_url,
-                'product_name'      : buy_bidding.product_size.product.name,
-                'product_brand'     : buy_bidding.product_size.product.brand.name,
-                'size'              : buy_bidding.product_size.size.size,
-            } for buy_bidding in biddings.filter(bidding_position_id = BiddingPositionId.BUY.value)]
+        sell_order_list = [{
+            'product_id'        : sell_order.bidding.product_size.product.id,
+            'product_image_url' : sell_order.bidding.product_size.product.productimage_set.all()[0].image_url,
+            'product_name'      : sell_order.bidding.product_size.product.name,
+            'product_brand'     : sell_order.bidding.product_size.product.brand.name,
+            'size'              : sell_order.bidding.product_size.size.size,
+            'order_status'      : sell_order.order_status.status,
+        }for sell_order in sell_orders]
 
-            sell_bidding_list = [{
-                'product_id'        : sell_bidding.product_size.product.id,
-                'product_image_url' : sell_bidding.product_size.product.productimage_set.all()[0].image_url,
-                'product_name'      : sell_bidding.product_size.product.name,
-                'product_brand'     : sell_bidding.product_size.product.brand.name,
-                'size'              : sell_bidding.product_size.size.size,
-            } for sell_bidding in biddings.filter(bidding_position_id = BiddingPositionId.SELL.value)]
+        buy_bidding_list = [{
+            'product_id'        : buy_bidding.product_size.product.id,
+            'product_image_url' : buy_bidding.product_size.product.productimage_set.all()[0].image_url,
+            'product_name'      : buy_bidding.product_size.product.name,
+            'product_brand'     : buy_bidding.product_size.product.brand.name,
+            'size'              : buy_bidding.product_size.size.size,
+        } for buy_bidding in biddings.filter(bidding_position_id = BiddingPositionId.BUY.value)]
 
-            buy_order_count       = len(buy_order_list)
-            sell_order_count      = len(sell_order_list)
-            buy_on_bidding_count  = len(buy_bidding_list)
-            sell_on_bidding_count = len(sell_bidding_list)
+        sell_bidding_list = [{
+            'product_id'        : sell_bidding.product_size.product.id,
+            'product_image_url' : sell_bidding.product_size.product.productimage_set.all()[0].image_url,
+            'product_name'      : sell_bidding.product_size.product.name,
+            'product_brand'     : sell_bidding.product_size.product.brand.name,
+            'size'              : sell_bidding.product_size.size.size,
+        } for sell_bidding in biddings.filter(bidding_position_id = BiddingPositionId.SELL.value)]
 
-            data = {
-                'user_point'            : user.point,
-                'buy_order_count'       : buy_order_count,
-                'buy_order_list'        : buy_order_list,
-                "sell_order_count"      : sell_order_count,
-                'sell_order_list'       : sell_order_list,
-                'buy_on_bidding_count'  : buy_on_bidding_count,
-                'buy_bidding_list'      : buy_bidding_list,
-                'sell_on_bidding_count' : sell_on_bidding_count,
-                'sell_bidding_list'     : sell_bidding_list
-            }
-            
-            cache.set(user.id, data)
+        buy_order_count       = len(buy_order_list)
+        sell_order_count      = len(sell_order_list)
+        buy_on_bidding_count  = len(buy_bidding_list)
+        sell_on_bidding_count = len(sell_bidding_list)
+
+        data = {
+            'user_name'             : user.name,
+            'user_email'            : user.email,
+            'user_point'            : user.point,
+            'buy_order_count'       : buy_order_count,
+            'buy_order_list'        : buy_order_list,
+            "sell_order_count"      : sell_order_count,
+            'sell_order_list'       : sell_order_list,
+            'buy_on_bidding_count'  : buy_on_bidding_count,
+            'buy_bidding_list'      : buy_bidding_list,
+            'sell_on_bidding_count' : sell_on_bidding_count,
+            'sell_bidding_list'     : sell_bidding_list
+        }
         
-        data = cache.get(user.id)
         return JsonResponse({'data' : data}, status = 200)
 
         
