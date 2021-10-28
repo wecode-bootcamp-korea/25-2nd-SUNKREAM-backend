@@ -189,8 +189,8 @@ class OrderTest(TestCase):
         access_token2     = jwt.encode({'user_id':2}, settings.SECRET_KEY, settings.ALGORITHMS)
         headers           = {'HTTP_AUTHORIZATION': access_token}
         headers2          = {'HTTP_AUTHORIZATION': access_token2}
-        user1             = User.objects.create(id =1, email = 'user1@gmail.com', point = 500000)
-        user2             = User.objects.create(id =2, email = 'user2@gmail.com', point = 200000)
+        user1             = User.objects.create(id =1, email = 'user1@gmail.com', point = 500000, name = 'abc')
+        user2             = User.objects.create(id =2, email = 'user2@gmail.com', point = 200000, name = 'bcd')
         brand             = Brand.objects.create(name = 'nike')
         product           = Product.objects.create(id = 1, brand = brand, name = 'product1', model_number = '100', release_price = 100000)
         size              = Size.objects.create(id = 1, size = 300)
@@ -336,6 +336,8 @@ class OrderTest(TestCase):
 
         data = {
             'user_point'            : 200000,
+            'user_name'             : 'bcd',
+            'user_email'            : 'user2@gmail.com',
             'buy_order_count'       : 1,
             'buy_order_list'        : [{
                 'product_id'        : 1,
