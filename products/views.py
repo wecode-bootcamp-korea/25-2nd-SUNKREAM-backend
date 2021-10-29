@@ -186,7 +186,7 @@ class DetailProductView(View) :
                                 'release_price'   : product.release_price,
                                 'model_number'    : product.model_number,
                                 'image_list'      : [image.image_url for image in product.productimage_set.all()],
-                                'recent_price'    : orders.first().bidding.price,
+                                'recent_price'    : orders.first().bidding.price if orders.exists() else None,
                                 'buy_price'       : product.buy_price,
                                 'sell_price'      : product.sell_price,
                                 'total_wishlist'  : wishlist,
