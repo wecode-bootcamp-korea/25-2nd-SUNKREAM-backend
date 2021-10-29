@@ -62,7 +62,6 @@ def user_point_check(user, position, bidding):
 
 class BiddingView(View):
     @login_decorator
-    @query_debugger
     def post(self, request, productsize_id, position_id):
         try:
             CheckId.check_product_size_id(productsize_id)
@@ -96,7 +95,6 @@ class BiddingView(View):
 
 
     @login_decorator
-    @query_debugger
     def get(self, request, productsize_id, position_id):
         try:
             CheckId.check_product_size_id(productsize_id)
@@ -135,7 +133,6 @@ class BiddingView(View):
     
 class SizePriceView(View):
     @login_decorator
-    @query_debugger
     def get(self, request, product_id, position_id):
         try:
             CheckId.check_product_id(product_id)             
@@ -173,7 +170,6 @@ class SizePriceView(View):
 
 class OrderView(View):
     @login_decorator
-    @query_debugger
     @transaction.atomic
     def post(self, request, bidding_id):
         try:
@@ -224,7 +220,6 @@ class OrderView(View):
             return JsonResponse({'message' : 'INSUFFICIENT_POINT'}, status = 400)
 
 class PriceHistoryView(View):
-    @query_debugger
     def get(self, request, product_id):
         try:
             CheckId.check_product_id(product_id)
@@ -311,7 +306,6 @@ class PriceHistoryView(View):
 
 class OrderListView(View):
     @login_decorator
-    @query_debugger
     def get(self, request):
         user = request.user
 
