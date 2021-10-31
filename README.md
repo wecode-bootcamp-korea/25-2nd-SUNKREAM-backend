@@ -19,7 +19,6 @@
 - 개발 인원 <br/>
  👨‍👧‍👦 **Front-End** 4명 : [김현진](https://github.com/71summernight), [박산성](https://github.com/p-acid), [이선호](https://github.com/sunhoh), [하상영](https://github.com/sangyouh) <br/>
 - [Front-end github 링크](https://github.com/wecode-bootcamp-korea/25-2nd-SUNKREAM-frontend)<br/>
-
  👨‍👧‍👦 **Back-End** 3명 : [박치훈](https://github.com/chihunmanse), [양가현](https://github.com/chrisYang256), [송영록](https://github.com/crescentfull)<br/>
 - [Back-end github 링크](https://github.com/wecode-bootcamp-korea/25-2nd-SUNKREAM-backend)
 
