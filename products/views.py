@@ -181,6 +181,7 @@ class DetailProductView(View) :
             wishlist              = len(Wishlist.objects.filter(id=product_id).all())
             
             product_detail = [{
+<<<<<<< HEAD
                                             'product_id'      : product.id,
                                             'name'            : product.name,
                                             'brand_name'      : product.brand.name,
@@ -192,6 +193,19 @@ class DetailProductView(View) :
                                             'sell_price'      : product.sell_price,
                                             'total_wishlist'  : wishlist,
                                       }]
+=======
+                                'product_id'      : product.id,
+                                'name'            : product.name,
+                                'brand_name'      : product.brand.name,
+                                'release_price'   : product.release_price,
+                                'model_number'    : product.model_number,
+                                'image_list'      : [image.image_url for image in product.productimage_set.all()],
+                                'recent_price'    : orders.first().bidding.price if orders.exists() else None,
+                                'buy_price'       : product.buy_price,
+                                'sell_price'      : product.sell_price,
+                                'total_wishlist'  : wishlist,
+                            }]
+>>>>>>> 3f41801 ([영록]fix : products/viesw.py)
 
             return JsonResponse({'product_detail' : product_detail}, status=200)
 
