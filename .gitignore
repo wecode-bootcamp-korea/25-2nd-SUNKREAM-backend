@@ -315,3 +315,5 @@ dbuploader.py
 db_faker.py
 dump.rdb
 dump1028.sql
+requirements-dev.txt
+s
