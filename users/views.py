@@ -24,7 +24,11 @@ class KakaoLogin(View):
                     kakao_id = kakao_account['id'],
                     email    = kakao_account['kakao_account']['email'],
                     name     = kakao_account['kakao_account']['profile']['nickname']
+<<<<<<< HEAD
             )
+=======
+                )
+>>>>>>> d6987e8 (FIX: users/views.py)
             user = User.objects.get(kakao_id=kakao_account['id'])
 
             access_token = jwt.encode({'user_id': user.id}, SECRET_KEY, algorithm=ALGORITHMS)
