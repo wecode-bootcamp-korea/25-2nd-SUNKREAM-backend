@@ -99,10 +99,10 @@ class ProductView(View) :
             offset   = int(request.GET.get('offset', 0))
 
             sort_by  = {
-                        'now_buy_price' : '-buy_price',
-                        'now_sell_price'  : 'sell_price',
-                        'premium'          : 'release_price',
-                        }
+                        'now_buy_price'  : '-buy_price',
+                        'now_sell_price' : 'sell_price',
+                        'premium'        : 'release_price',
+                    }
 
             products_filter = Q()
             
@@ -131,13 +131,13 @@ class ProductView(View) :
                 products = products[offset : limit]
 
             products_list = [{
-                            'id'                    : product.id,
-                            'brand'              : product.brand.name,
-                            'name'              : product.name,
+                            'id'            : product.id,
+                            'brand'         : product.brand.name,
+                            'name'          : product.name,
                             'thumbnail_url' : product.productimage_set.first().image_url,
                             'product_price' : product.buy_price,
-                            'release_price'  : product.release_price
-                            } for product in products]
+                            'release_price' : product.release_price
+                        } for product in products]
             return JsonResponse({'products_list' : products_list}, status = 200)
 
         except TypeError as e :
@@ -152,7 +152,7 @@ class BrandView(View):
             brand_list = [{
                         'brand_id'   : brand.id,
                         'brand_name' : brand.name,
-                        } for brand in brands]
+                    } for brand in brands]
             return JsonResponse({'brand_list' : brand_list}, status = 200)
 
 class DetailProductView(View) :
