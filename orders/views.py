@@ -204,7 +204,6 @@ class OrderView(View):
                 user.save()
                 bidding.user.point = bidding.user.point + bidding.price
                 bidding.user.save()
-               
             return JsonResponse({'message' : 'SUCCESS'}, status = 201)
         
         except Bidding.DoesNotExist:
